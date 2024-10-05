@@ -1,101 +1,73 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState } from 'react';
+import Header from '@/components/Header';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import dynamic from 'next/dynamic';
+
+// Dynamic import for QRCode component
+const DynamicQRCode = dynamic(() => import('@/components/QRCode'), {
+  ssr: false, // Disable server-side rendering for this component
+});
+
+const Home = () => {
+  const [qrData, setQrData] = useState<string>('https://secQr.com');
+
+  const onDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQrData(event.target.value);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className='h-screen bg-black'>
+      <Header />
+      <div className='container flex items-center justify-center mx-auto xl:p-8'>
+        <Card className='w-full xl:p-3 xl:max-h-[600px] bg-black border-none'>
+          <CardContent className='flex flex-col-reverse xl:flex-row gap-6'>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            {/* Left side: QR Image */}
+            <div className='flex-1 flex flex-col items-center justify-center'>
+            <DynamicQRCode data={qrData} /> {/* Pass the qrData as a prop */}
+            </div>
+
+            {/* Right side: Button Section */}
+            <div className='flex-1 flex w-full justify-start xl:px-5'>
+              <Tabs defaultValue='Data' className='w-full mt-4 xl:ml-4'>
+                <TabsList className='w-full grid grid-cols-5 h-[50px] gap-2 bg-main xl:px-5'>
+                  <TabsTrigger value='Data'>Data</TabsTrigger>
+                  <TabsTrigger value='Colors'>Corners</TabsTrigger>
+                  <TabsTrigger value='Frames'>Frames</TabsTrigger>
+                  <TabsTrigger value='Dots'>Dots</TabsTrigger>
+                  <TabsTrigger value='upload'>Upload</TabsTrigger>
+                </TabsList>
+                <TabsContent value='Data'>
+                  <Card className='h-[400px] bg-teal-800 py-3'>
+                    <CardContent>
+                      <div className='flex flex-row gap-2 mt-16 p-1 items-center justify-center'>
+                        <div className='grid gap-1.5'>
+                          <Label htmlFor='Url' className='text-white font-bold text-1xl '>URL / Link</Label>
+                          <Input 
+                            id='Url' 
+                            value={qrData} 
+                            onChange={onDataChange} 
+                            className='w-[350px]' 
+                            placeholder='Enter your Website URL here' 
+                          />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
